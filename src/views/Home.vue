@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h3 class="p-3 text-center">Logs list</h3>
+    <h3>Logs list</h3>
     <table>
       <thead>
         <tr>
@@ -11,9 +11,22 @@
       </thead>
       <tbody>
         <tr v-for="(log, index) in tableLogs" :key="index">
-          <td>{{ log.number }}</td>
+          <td>
+            <router-link :to="{ path: 'call', query: { number: log.number } }"
+              >{{ log.number }}
+            </router-link>
+          </td>
+
           <td>{{ log.callsNumber }} Calls</td>
-          <td>{{ log.lastCall.agentName }} / {{ log.lastCall.time }}</td>
+
+          <td>
+            <router-link
+              :to="{ path: 'agent', query: { ID: log.lastCall.identifier } }"
+            >
+              {{ log.lastCall.agentName }}
+            </router-link>
+            / {{ log.lastCall.time }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -21,8 +34,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import { groupBy } from "./../utils/utils";
+import { mapState } from "vuex";
 
 export default {
   name: "Home",
@@ -32,42 +45,34 @@ export default {
     };
   },
   async created() {
-    const API =
-      process.env.NODE_ENV === "production"
-        ? "https://legaloneapi.herokuapp.com"
-        : "http://localhost:4000";
+    await this.$store.dispatch("callAPI");
+    const groupedNumbers = groupBy(this.logs, "number");
+    // After grouping the logs by phone number, create an array of objects with phone number, number of calls and linked agent
+    let groupedLogs = [];
+    for (let j in groupedNumbers) {
+      const temporaryObject = {};
+      // find the agent who made the last call
+      const lastCall = groupedNumbers[j].reduce((a, b) => {
+        return new Date(a.dateTime) > new Date(b.dateTime) ? a : b;
+      });
+      const agent = this.agents.find(
+        (agente) => agente.identifier === lastCall.agentIdentifier
+      );
 
-    try {
-      const agentsResponse = await axios.get(`${API}/agents`);
-      const agents = agentsResponse.data;
-      const logsResponse = await axios.get(`${API}/logs`);
-      const logs = logsResponse.data;
-      console.log(logs);
-      const groupedNumbers = groupBy(logs, "number");
-      // After grouping the logs by phone number, create an array of objects with phone number, number of calls and linked agent
-      let groupedLogs = [];
-      for (let j in groupedNumbers) {
-        const temporaryObject = {};
-        const lastCall = groupedNumbers[j].reduce((a, b) => {
-          return new Date(a.dateTime) > new Date(b.dateTime) ? a : b;
-        });
-
-        const agent = agents.find(
-          (agente) => agente.identifier === lastCall.agentIdentifier
-        );
-        temporaryObject["number"] = j;
-        temporaryObject["callsNumber"] = groupedNumbers[j].length;
-        temporaryObject["lastCall"] = {
-          time: lastCall.dateTime,
-          agentName: agent.firstName,
-        };
-        groupedLogs.push(temporaryObject);
-      }
-
-      this.tableLogs = groupedLogs;
-    } catch (error) {
-      console.error(error);
+      temporaryObject["number"] = j;
+      temporaryObject["callsNumber"] = groupedNumbers[j].length;
+      temporaryObject["lastCall"] = {
+        time: lastCall.dateTime,
+        agentName: agent.firstName,
+        identifier: agent.identifier,
+      };
+      groupedLogs.push(temporaryObject);
     }
+
+    this.tableLogs = groupedLogs;
+  },
+  computed: {
+    ...mapState(["agents", "logs"]),
   },
 };
 </script>
