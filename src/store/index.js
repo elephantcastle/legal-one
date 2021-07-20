@@ -9,6 +9,7 @@ export default new Vuex.Store({
     agents: [],
     logs: [],
     resolution: [],
+    error: "",
   },
   mutations: {
     SET_AGENTS(state, agents) {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     },
     SET_RESOLUTION(state, resolution) {
       state.resolution = resolution;
+    },
+    SET_ERROR(state, error) {
+      state.error = error;
     },
   },
   actions: {
@@ -38,7 +42,9 @@ export default new Vuex.Store({
         const resolutionResponse = await axios.get(`${API}/resolution`);
         const resolution = resolutionResponse.data;
         commit("SET_RESOLUTION", resolution);
+        commit("SET_ERROR", "");
       } catch (error) {
+        commit("SET_ERROR", "No available data");
         console.error(error);
       }
     },

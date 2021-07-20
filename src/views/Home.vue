@@ -1,37 +1,40 @@
 <template>
   <div class="home">
     <h3>Logs list</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Phone number</th>
-          <th>Number of calls</th>
-          <th>Last call details</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(log, index) in tableLogs" :key="index">
-          <td>
-            <router-link :to="{ path: 'call', query: { number: log.number } }"
-              >{{ log.number }}
-            </router-link>
-          </td>
+    <div v-if="!warning && tableLogs && tableLogs.length">
+      <table>
+        <thead>
+          <tr>
+            <th>Phone number</th>
+            <th>Number of calls</th>
+            <th>Last call details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(log, index) in tableLogs" :key="index">
+            <td>
+              <router-link :to="{ path: 'call', query: { number: log.number } }"
+                >{{ log.number }}
+              </router-link>
+            </td>
 
-          <td>{{ log.callsNumber }} Calls</td>
+            <td>{{ log.callsNumber }} Calls</td>
 
-          <td>
-            <router-link
-              :to="{ path: 'agent', query: { ID: log.lastCall.identifier } }"
-            >
-              {{ log.lastCall.agentName }}
-            </router-link>
-            / {{ log.lastCall.time }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <td>
+              <router-link
+                :to="{ path: 'agent', query: { ID: log.lastCall.identifier } }"
+              >
+                {{ log.lastCall.agentName }}
+              </router-link>
+              / {{ log.lastCall.time }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <Chart :data="tableLogs"></Chart>
+      <Chart :data="tableLogs"></Chart>
+    </div>
+    <div v-if="warning">{{ warning }}</div>
   </div>
 </template>
 
@@ -78,7 +81,10 @@ export default {
     this.tableLogs = groupedLogs;
   },
   computed: {
-    ...mapState(["agents", "logs"]),
+    ...mapState(["agents", "logs", "error"]),
+    warning() {
+      return this.error;
+    },
   },
 };
 </script>
