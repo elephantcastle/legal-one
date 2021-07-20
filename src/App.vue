@@ -12,17 +12,28 @@
   text-align: center;
   color: #2c3e50;
 }
-
-#nav {
-  padding: 30px;
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.home,
+.agent,
+.call {
+  margin: 10px 40px;
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+table,
+th,
+td {
+  border: 1px solid black;
+}
+table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+tr {
+  width: 30%;
 }
 </style>

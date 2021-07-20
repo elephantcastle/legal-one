@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>Logs for agent: {{ ID }}</div>
+  <div class="agent">
+    <h3>Logs for agent: {{ ID }}</h3>
     <table>
       <thead>
         <tr>

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>call number: {{ number }}</div>
+  <div class="call">
+    <h3>call number: {{ number }}</h3>
     <table>
       <thead>
         <tr>

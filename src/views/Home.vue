@@ -77,21 +77,3 @@ export default {
 };
 </script>
 
-<style>
-table,
-th,
-td {
-  border: 1px solid black;
-}
-
-table {
-  table-layout: fixed;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-tr {
-  width: 30%;
-}
-</style>
