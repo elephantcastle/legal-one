@@ -30,15 +30,21 @@
         </tr>
       </tbody>
     </table>
+
+    <Chart :data="tableLogs"></Chart>
   </div>
 </template>
 
 <script>
 import { groupBy } from "./../utils/utils";
 import { mapState } from "vuex";
+import Chart from "@/components/Chart";
 
 export default {
   name: "Home",
+  components: {
+    Chart,
+  },
   data() {
     return {
       tableLogs: [],
@@ -76,4 +82,3 @@ export default {
   },
 };
 </script>
-
