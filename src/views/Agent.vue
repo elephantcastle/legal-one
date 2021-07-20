@@ -32,18 +32,22 @@ export default {
     };
   },
   created() {
-    this.logs.forEach((log) => {
-      if (log.agentIdentifier === this.ID) {
-        const resolutionResult = this.resolution.find(
-          (res) => res.identifier === log.identifier
-        ).resolution;
+    if (this.logs?.length && this.resolution?.length && this.ID) {
+      this.logs.forEach((log) => {
+        if (log.agentIdentifier === this.ID) {
+          const resolutionResult = this.resolution.find(
+            (res) => res.identifier === log.identifier
+          ).resolution;
 
-        this.tableLogs.push({
-          ...log,
-          resolution: resolutionResult,
-        });
-      }
-    });
+          this.tableLogs.push({
+            ...log,
+            resolution: resolutionResult,
+          });
+        }
+      });
+    } else {
+      this.$router.push({ path: "/" });
+    }
   },
   computed: {
     ...mapState(["logs", "resolution"]),

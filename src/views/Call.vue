@@ -35,22 +35,26 @@ export default {
     };
   },
   created() {
-    this.logs.forEach((log) => {
-      if (log.number === this.number) {
-        const agent = this.agents.find(
-          (agent) => log.agentIdentifier === agent.identifier
-        );
-        const resolutionResult = this.resolution.find(
-          (res) => res.identifier === log.identifier
-        ).resolution;
+    if (this.logs?.length && this.resolution?.length && this.number) {
+      this.logs.forEach((log) => {
+        if (log.number === this.number) {
+          const agent = this.agents.find(
+            (agent) => log.agentIdentifier === agent.identifier
+          );
+          const resolutionResult = this.resolution.find(
+            (res) => res.identifier === log.identifier
+          ).resolution;
 
-        this.tableLogs.push({
-          ...log,
-          agent: agent.firstName + " " + agent.lastName,
-          resolution: resolutionResult,
-        });
-      }
-    });
+          this.tableLogs.push({
+            ...log,
+            agent: agent.firstName + " " + agent.lastName,
+            resolution: resolutionResult,
+          });
+        }
+      });
+    } else {
+      this.$router.push({ path: "/" });
+    }
   },
 };
 </script>
