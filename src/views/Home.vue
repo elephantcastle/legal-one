@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { groupBy } from "./../utils/utils";
+import { groupBy, readableHours } from "./../utils/utils";
 import { mapState } from "vuex";
 import Chart from "@/components/Chart";
 
@@ -70,8 +70,9 @@ export default {
 
       temporaryObject["number"] = j;
       temporaryObject["callsNumber"] = groupedNumbers[j].length;
+
       temporaryObject["lastCall"] = {
-        time: lastCall.dateTime,
+        time: readableHours(lastCall.dateTime),
         agentName: agent.firstName,
         identifier: agent.identifier,
       };

@@ -12,7 +12,7 @@
       <tbody>
         <tr v-for="(log, index) in tableLogs" :key="index">
           <td>{{ log.agent }}</td>
-          <td>{{ log.dateTime }}</td>
+          <td>{{ readableDate(log.dateTime) }}</td>
           <td>{{ log.resolution }}</td>
         </tr>
       </tbody>
@@ -22,6 +22,8 @@
 
 <script>
 import { mapState } from "vuex";
+import { readableDate } from "../utils/utils";
+
 export default {
   props: {
     number: { type: String },
@@ -32,6 +34,7 @@ export default {
   data() {
     return {
       tableLogs: [],
+      readableDate,
     };
   },
   created() {
